@@ -65,9 +65,12 @@ class ExplosionBall {
     this.draw();
   }
 
+  static rafNum:number|null = null
+
   //爆炸动画
   static animation(balls: Array<ExplosionBall>) {
-    let rafNum = requestAnimationFrame(function () {
+    let rafNum:number|null = null
+    rafNum = requestAnimationFrame(function () {
       ExplosionBall.animation(balls);
     });
     ExplosionBall.ctx.fillStyle = "rgba(0,0,0,0.05)";
@@ -84,11 +87,13 @@ class ExplosionBall {
         balls.splice(index, 1);
       }
       if (balls.length === 0) {
+        console.log("true");
         ExplosionBall.clearCanvas();
-        cancelAnimationFrame(rafNum);
+        cancelAnimationFrame(rafNum as number);
+        rafNum = null;
       }
     });
-    console.log(rafNum);
+    // console.log(rafNum);
   }
 
   //清屏操作
@@ -103,7 +108,7 @@ class ExplosionBall {
 }
 
 //小球数组
-const balls: Array<ExplosionBall> = [];
+let balls: Array<ExplosionBall> = [];
 
 onMounted(() => {
   if (canvas.value) {
@@ -117,6 +122,7 @@ onMounted(() => {
 
     if (ctx) {
       canvas.value.addEventListener("click", (e: MouseEvent) => {
+        balls = []
         // console.log(e);
         //创建的小球数量
         let num = 300;
@@ -145,7 +151,6 @@ onMounted(() => {
           );
         }
         ExplosionBall.animation(balls);
-        // console.log(balls[0]);
       });
     }
   }
